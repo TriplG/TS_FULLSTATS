@@ -3,5 +3,7 @@ from .views import *
 
 
 urlpatterns = [
-    path('index/', index, name='index'),
+    path('', Home.as_view(), name='index'),
+    path('sort', Sort.as_view(), name='sort'),
+
 ]

@@ -5,6 +5,32 @@
     <title>{{ title }}</title>
 </head>
 <body>
+    <h3>
+        <a href="{% url 'index' %}" style="margin-right: 75px;">Главная страница</a>
+        <a href="#" style="margin-right: 75px;">Зарегистрироваться</a>
+        <a href="#" style="margin-right: 75px;">Войти</a>
+    </h3>
 
+    <form action="{% url 'sort' %}" method="post">
+        {% csrf_token %}
+        {{ sort_form }}
+    <p><input type="submit" name="sort" value="Сортировать"></p>
+    </form>
+    <br>
+
+    {% for p in posts %}
+    <hr>
+    <h1>{{ p.title }}</h1>
+    <h2>{{ p.summary }}</h2>
+    <h3>{{ p.num_of_views }} просмотров |
+        {% if p.rating is None %}
+            нет рейтинга
+        {% else %}
+        рейтинг {{ p.rating }}</h3>
+        {% endif %}
+
+
+
+    {% endfor %}
 </body>
 </html>
