@@ -15,9 +15,14 @@ class Home(ListView):
     model = Article
     template_name = 'blog/index.html'
     context_object_name = 'posts'
+    queryset = Article.objects.all().order_by('-pk')
 
-    def get_queryset(self):
-        return Article.objects.all().order_by('-pk')
+    # def get_queryset(self):
+    #     query = self.request.GET.get('q')
+    #     object_list = Article.objects.filter(
+    #         slug__icontains=query
+    #     )
+    #     return object_list
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -168,9 +173,13 @@ class Unmark(View):
         return response
 
 
-
-
-
-
+class SearchView(View):
+    def get(self, request):
+        try:
+            print(request.GET.get("q", ""))
+            return redirect(f'/post/{request.GET.get("q", "")}/')
+        except ObjectDoesNotExist:
+            raise Http404
+        return redirect('/')
 
 

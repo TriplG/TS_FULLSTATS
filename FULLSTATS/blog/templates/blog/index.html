@@ -1,12 +1,16 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-
+<br>
+    <form action="{% url 'search' %}" method="get">
+        <p><input name="q" type="text" placeholder="Найти...">
+        <input type="submit" name="Search" value="Найти"></p>
+    </form>
 
     <form action="{% url 'sort' %}" method="post">
         {% csrf_token %}
-        {{ sort_form }}
-    <p><input type="submit" name="sort" value="Сортировать"></p>
+        <p>{{ sort_form }}
+    <input type="submit" name="sort" value="Сортировать"></p>
     </form>
     <br>
 
