@@ -17,4 +17,7 @@ urlpatterns = [
     path('registration/', Registration.as_view(), name='registration'),
     path('login/', LoginUser.as_view(), name='login'),
     path('add_registration/', AddRegistration.as_view(), name='add_registration'),
+    path('log_out/', log_out, name='log_out'),
+    path('logget_out/', LogOut.as_view(), name='logget_out'),
+
 ]

@@ -1,12 +1,14 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.urls import reverse_lazy
+from django.contrib.auth import logout
+
 
 
 from .models import *
@@ -217,3 +219,13 @@ class AddRegistration(View):
 
         print(request.POST)
         return redirect('/login/')
+
+
+def log_out(request):
+    logout(request)
+    return HttpResponseRedirect("/")
+
+
+class LogOut(View):
+    def get(self, request):
+        return render(request, 'blog/logged_out.html', {'title': 'Выйти'})
