@@ -1,6 +1,8 @@
+from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 
@@ -8,22 +10,15 @@ from .models import *
 from .forms import *
 
 
-# def index(request):
-#     posts = Article.objects.all()
-#     sort_form = SortForm()
-#
-#     context = {
-#         'sort_form': sort_form,
-#         'posts': posts,
-#         'title': 'Главная страница'
-#     }
-#     return render(request, 'blog/index.html', context=context)
-
-
 class Home(ListView):
+    # Представление главной страницы со всеми статьями
     model = Article
     template_name = 'blog/index.html'
     context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Article.objects.all().order_by('-pk')
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sort_form'] = SortForm()
@@ -32,6 +27,7 @@ class Home(ListView):
 
 
 class Sort(View):
+    # Представление отсортированной главной страницы
     def post(self, request):
         sort_form = SortForm(request.POST)
         posts = Article.objects.all()
@@ -51,6 +47,7 @@ class Sort(View):
 
 
 class ShowPost(DetailView):
+    # Представление конкретной статьи
     model = Article
     template_name = 'blog/post.html'
     context_object_name = 'post'
@@ -61,11 +58,16 @@ class ShowPost(DetailView):
         context['title'] = context['post']
         if f'{self.kwargs["post_slug"]}_rating' in self.request.COOKIES:
             context['rate'] = self.request.COOKIES[f'{self.kwargs["post_slug"]}_rating']
+        if f'{self.kwargs["post_slug"]}_liked' in self.request.COOKIES:
+            context['liked'] = self.request.COOKIES[f'{self.kwargs["post_slug"]}_liked']
+        if f'{self.kwargs["post_slug"]}_disliked' in self.request.COOKIES:
+            context['liked'] = self.request.COOKIES[f'{self.kwargs["post_slug"]}_disliked']
 
         return context
 
 
 class ChangeRating(View):
+    # Представление для изменения рейтинга неавторизованному пользователю в первый раз
     def post(self, request, post_slug):
         try:
             if f'{post_slug}_rating' in request.COOKIES:
@@ -100,11 +102,9 @@ class ChangeRating(View):
 
 
 class ChangeNewRating(View):
+    # Представление для изменения рейтинга неавторизованному пользователю в последующие разы
     def post(self, request, post_slug):
         try:
-            # if f'{post_slug}_rating' in request.COOKIES:
-            #     redirect(f'/post/{post_slug}/')
-            # else:
             art = Article.objects.get(slug=post_slug)
             rating = RatingArticle.objects.get(article_rating=art)
             rating.total_amount += int(request.POST.get('num_new')) - int(request.COOKIES[f'{post_slug}_rating'])
@@ -118,3 +118,59 @@ class ChangeNewRating(View):
         except ObjectDoesNotExist:
             raise Http404
         return redirect(f'/post/{post_slug}/')
+
+
+class Like(View):
+    # Представление для возможности поставить лайк неавторизованному пользователю
+
+    def post(self, request, post_slug):
+        try:
+            response = redirect(f'/post/{post_slug}/')
+            response.set_cookie(f'{post_slug}_liked', 1)
+            return response
+        except ObjectDoesNotExist:
+            raise Http404
+        return redirect(f'/post/{post_slug}/')
+
+
+class Dislike(View):
+    # Представление для возможности поставить дизлайк неавторизованному пользователю
+    def post(self, request, post_slug):
+        try:
+            response = redirect(f'/post/{post_slug}/')
+            response.set_cookie(f'{post_slug}_disliked', -1)
+            return response
+        except ObjectDoesNotExist:
+            raise Http404
+        return redirect(f'/post/{post_slug}/')
+
+
+class MyLikes(View):
+    # Представление понравившихся постов для неавторизованных пользователей
+    def get(self, request):
+        posts = Article.objects.all()
+        context = {
+            'posts': posts,
+            'title': 'Мне понравилось'
+        }
+        return render(request, 'blog/my_likes.html', context=context)
+
+
+class Unmark(View):
+    # Представление для отмены лайка/дизлайка неавторизованным пользователям
+    def post(self, request, post_slug):
+
+        response = redirect(f'/post/{post_slug}/')
+        if f'{post_slug}_liked' in request.COOKIES:
+            response.delete_cookie(f'{post_slug}_liked')
+        if f'{post_slug}_disliked' in request.COOKIES:
+            response.delete_cookie(f'{post_slug}_disliked')
+        return response
+
+
+
+
+
+
+
+

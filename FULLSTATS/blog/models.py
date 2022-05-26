@@ -9,9 +9,13 @@ class Article(models.Model):
     summary = models.CharField(verbose_name='Краткое содержание', max_length=250)
     content = models.TextField(verbose_name='Содержание')
     num_of_views = models.PositiveIntegerField(verbose_name='Количество просмотров', default=0)
-    favorites = models.BooleanField(verbose_name='В избранном', default=False)
+    # favorites = models.BooleanField(verbose_name='В избранном', default=False)
     rating = models.DecimalField(verbose_name='Рейтинг', null=True, blank=True, max_digits=3, decimal_places=1,
-                                 validators=[MinValueValidator(0.0), MaxValueValidator(10.0)])
+                                 validators=[
+                                     MinValueValidator(0.0),
+                                     MaxValueValidator(10.0)
+                                 ]
+                                 )
 
     class Meta:
         verbose_name = 'Пост'

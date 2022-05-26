@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 
+# git push -u origin main
 
 urlpatterns = [
     path('', Home.as_view(), name='index'),
@@ -8,5 +9,10 @@ urlpatterns = [
     path('post/<slug:post_slug>/', ShowPost.as_view(), name='post'),
     path('post/<slug:post_slug>/rating/', ChangeRating.as_view(), name='rating'),
     path('post/<slug:post_slug>/new_rating/', ChangeNewRating.as_view(), name='change_new_rating'),
+    path('post/<slug:post_slug>/like/', Like.as_view(), name='like'),
+    path('post/<slug:post_slug>/dislike/', Dislike.as_view(), name='dislike'),
+    path('my_likes/', MyLikes.as_view(), name='my_likes'),
+    path('post/<slug:post_slug>/unmark/', Unmark.as_view(), name='unmark'),
+    path('search/', SearchView.as_view(), name='search'),
 
 ]

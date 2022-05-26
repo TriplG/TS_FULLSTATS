@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<br>
+{% for p in posts %}
+{% if p.slug|add:'_liked' in request.COOKIES %}
+<hr>
+        <h1><a href="{% url 'post' post_slug=p.slug %}">{{ p.title }}</a></h1>
+    <h2>{{ p.summary }}</h2>
+    <h3>{{ p.num_of_views }} просмотров |
+        {% if p.rating is None %}
+            нет рейтинга
+        {% else %}
+        рейтинг {{ p.rating }}</h3>
+        {% endif %}
+{% endif %}
+{% endfor %}
+
+{% endblock %}

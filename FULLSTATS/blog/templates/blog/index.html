@@ -10,6 +10,8 @@
     </form>
     <br>
 
+
+
     {% for p in posts %}
     <hr>
     <h1><a href="{% url 'post' post_slug=p.slug %}">{{ p.title }}</a></h1>

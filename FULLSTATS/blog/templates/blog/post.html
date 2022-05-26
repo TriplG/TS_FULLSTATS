@@ -13,12 +13,35 @@
 рейтинг {{ post.rating }}</h3>
 {% endif %}
 <hr>
+{% if liked == None %}
+<form>
+{% csrf_token %}
+<h3><input formaction="{% url 'like' post_slug=post.slug %}" formmethod="post" type="submit" value="Нравится">
+<input formaction="{% url 'dislike' post_slug=post.slug %}" formmethod="post" type="submit" value="Не нравится"></h3>
+</form>
+{% endif %}
+{% if liked == "1" %}
+    <h3>Вы поставили лайк этому посту</h3>
+    <form action="{% url 'unmark' post_slug=post.slug %}" method="post">
+        {% csrf_token %}
+    <p><input type="submit" name="unmark" value="Снять пометку"></p>
+    </form>
+{% endif %}
+{% if liked == "-1" %}
+<h3>Вы поставили дизлайк этому посту</h3>
+    <form action="{% url 'unmark' post_slug=post.slug %}" method="post">
+        {% csrf_token %}
+    <p><input type="submit" name="unmark" value="Снять пометку"></p>
+    </form>
+{% endif %}
+
+<hr>
 
     {% if rate %}
     <h3>Вы оценили статью на {{ rate }}</h3>
     <form action="{% url 'change_new_rating' post_slug=post.slug %}" method="post">
         {% csrf_token %}
-        <h4>Оцените статью:  <input type="number" size="3" name="num_new" min="0" max="10"  step="1"></h4>
+        <h4>Поставьте другую оценку:  <input type="number" size="3" name="num_new" min="0" max="10"  step="1"></h4>
         <p><input type="submit" name="change_new_rating" value="Оценить"></p>
     </form>
 
