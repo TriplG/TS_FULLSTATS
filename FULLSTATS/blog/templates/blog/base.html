@@ -10,8 +10,13 @@
     <h3>
         <a href="{% url 'index' %}" style="margin-right: 75px;">Главная страница</a>
         <a href="{% url 'my_likes' %}" style="margin-right: 75px;">Вам понравилось</a>
-        <a href="#" style="margin-right: 75px;">Зарегистрироваться</a>
-        <a href="#" style="margin-right: 75px;">Войти</a>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'my_likes' %}" style="margin-right: 75px;">Избранное</a>
+        <a href="{% url 'my_likes' %}" style="margin-right: 75px;">Выйти</a>
+        {% else %}
+        <a href="{% url 'registration' %}" style="margin-right: 75px;">Зарегистрироваться</a>
+        <a href="{% url 'login' %}" style="margin-right: 75px;">Войти</a>
+        {% endif %}
     </h3>
 <hr>
 {% endblock mainmenu %}

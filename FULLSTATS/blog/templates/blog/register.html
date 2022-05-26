@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+<form class="row contact_form" action="{% url 'add_registration' %}" method="post" novalidate="novalidate">
+    {% csrf_token %}
+    <p><input type="text" id="name" name="name" placeholder="Введите логин"></p>
+    <p><input type="password" id="pass" name="pass" placeholder="Введите пароль"></p>
+    <p><input type="text" id="email" name="email" placeholder="Введите email"></p>
+    <p><input type="submit" name="rating" value="Зарегистрироваться"></p>
+</form>
+
+
+{% endblock %}

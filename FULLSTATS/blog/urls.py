@@ -14,5 +14,7 @@ urlpatterns = [
     path('my_likes/', MyLikes.as_view(), name='my_likes'),
     path('post/<slug:post_slug>/unmark/', Unmark.as_view(), name='unmark'),
     path('search/', SearchView.as_view(), name='search'),
-
+    path('registration/', Registration.as_view(), name='registration'),
+    path('login/', LoginUser.as_view(), name='login'),
+    path('add_registration/', AddRegistration.as_view(), name='add_registration'),
 ]

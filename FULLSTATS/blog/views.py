@@ -1,13 +1,19 @@
 from django.contrib.auth import logout
+from django.contrib.auth.views import LoginView
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
+from django.urls import reverse_lazy
+
 
 from .models import *
 from .forms import *
+
+from django.views.generic.edit import FormView
+
 
 
 class Home(ListView):
@@ -183,3 +189,31 @@ class SearchView(View):
         return redirect('/')
 
 
+class Registration(View):
+    def get(self, request):
+        return render(request, 'blog/register.html', {'title': 'Корзина'})
+
+
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = 'blog/login.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Авторизация'
+
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('index')
+
+
+class AddRegistration(View):
+    def post(self, request):
+        create_user = User.objects.create_user(
+            request.POST.get('name'), request.POST.get('email'), request.POST.get('password')
+        )
+        create_user.save()
+
+        print(request.POST)
+        return redirect('/login/')
