@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'FULLSTATS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_test',
+        'NAME': 'test_zad',
         'USER': 'sasha',
         'PASSWORD': 'admin',
         # 'HOST': 'localhost',

@@ -1,0 +1,36 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<br>
+
+<h1>{{ post.title }}</h1>
+<h2>{{ post.summary }}</h2>
+<h2>{{ post.content }}</h2>
+<h3>{{ post.num_of_views }} просмотров |
+{% if post.rating is None %}
+    нет рейтинга
+{% else %}
+рейтинг {{ post.rating }}</h3>
+{% endif %}
+<hr>
+
+    {% if rate %}
+    <h3>Вы оценили статью на {{ rate }}</h3>
+    <form action="{% url 'change_new_rating' post_slug=post.slug %}" method="post">
+        {% csrf_token %}
+        <h4>Оцените статью:  <input type="number" size="3" name="num_new" min="0" max="10"  step="1"></h4>
+        <p><input type="submit" name="change_new_rating" value="Оценить"></p>
+    </form>
+
+    {% else %}
+    <h4>Оценить заново</h4>
+
+    <form action="{% url 'rating' post_slug=post.slug %}" method="post">
+        {% csrf_token %}
+        <h4>Оцените статью:  <input type="number" size="3" name="num" min="0" max="10"  step="1"></h4>
+        <p><input type="submit" name="rating" value="Оценить"></p>
+    </form>
+
+    {% endif %}
+
+{% endblock %}

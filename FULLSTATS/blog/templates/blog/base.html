@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+{% block mainmenu %}
+
+    <h3>
+        <a href="{% url 'index' %}" style="margin-right: 75px;">Главная страница</a>
+        <a href="#" style="margin-right: 75px;">Зарегистрироваться</a>
+        <a href="#" style="margin-right: 75px;">Войти</a>
+    </h3>
+{% endblock mainmenu %}
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
